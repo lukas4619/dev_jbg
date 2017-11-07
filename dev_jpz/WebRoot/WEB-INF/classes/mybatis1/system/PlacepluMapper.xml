@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PlacepluMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		TPLACEPLU
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,	
+		PLUCODE,	
+		STOREID,	
+		SHELVESID,	
+		PLACEID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},	
+		#{PLUCODE},	
+		#{STOREID},	
+		#{SHELVESID},	
+		#{PLACEID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		PLUCODE,	
+		STOREID,	
+		SHELVESID,	
+		PLACEID
+		) values (
+		#{PLUCODE},	
+		#{STOREID},	
+		#{SHELVESID},	
+		#{PLACEID}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			
+			PLUCODE = #{PLUCODE},
+			STOREID = #{STOREID},
+			SHELVESID = #{SHELVESID},
+			PLACEID = #{PLACEID}
+		where 
+		ID = #{ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select tplaceplu.ID,tplaceplu.PLUCODE,tplaceplu.STOREID,tplaceplu.SHELVESID,tplaceplu.PLACEID,
+		(SELECT tstore.storeName FROM tstore where tstore.id=tplaceplu.storeId) AS STORENAME,
+		(SELECT tshelves.shelvesName FROM tshelves WHERE tshelves.id=tplaceplu.shelvesId) AS SHELVESNAME,
+		tplace.placeName AS PLACENAME,
+		tskuplu.PLUNAME,tskuplu.BARCODE,tskuplu.PLUIMAGE,tskuplu.SPEC,tskuplu.UNITS,tskuplu.PRICE,tskuplu.PPRICE,
+		tskuplu.PLUCLASSID,tskuplu.PLUSTATUS,tskuplu.PLUTYPEID,
+		(SELECT tcproperty.`name` FROM  tcproperty  where tcproperty.id=tskuplu.pluClassId) as PLUCLASSNAME,
+		(SELECT tcproperty.`name` FROM tcproperty  WHERE tcproperty.id=tskuplu.pluTypeId) AS PLUTYPENAME,
+		(SELECT tcproperty.`name` FROM  tcproperty WHERE tcproperty.id=tskuplu.pluStatus) AS PLUSTATUSNAME
+		 from tplaceplu
+		 JOIN
+		tskuplu
+		ON
+		tplaceplu.pluCode=tskuplu.pluCode 
+	    JOIN
+	    tplace
+	    on
+	    tplace.id=tplaceplu.placeId
+		where 1=1
+		<if test="pd!=null">
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+				(
+				 tskuplu.PLUNAME LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 OR tskuplu.BARCODE LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 OR tskuplu.PLUCODE LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 OR tplace.placeName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				)
+			</if>
+			<if test="pd.storeId!=-1 and pd.storeId!=null">
+				and tplaceplu.storeId=#{pd.storeId}
+			</if>
+			<if test="pd.shelvesId!=-1 and pd.shelvesId!=null">
+				and tplaceplu.shelvesId=#{pd.shelvesId}
+			</if>
+			<if test="pd.pluClassId!=-1 and pd.pluClassId!=null">
+				and tskuplu.pluClassId=#{pd.pluClassId}
+			</if>
+			<if test="pd.pluTypeId!=-1 and pd.pluTypeId!=null">
+				and tskuplu.pluTypeId=#{pd.pluTypeId}
+			</if>
+			<if test="pd.pluStatus!=-1 and pd.pluStatus!=null">
+				and tskuplu.pluStatus=#{pd.pluStatus}
+			</if>
+		</if>
+		order by tplaceplu.ID desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+				SELECT ID,PLUCODE,STOREID,SHELVESID,PLACEID,STORENAME,SHELVESNAME,PLACENAME,PLUNAME,BARCODE,
+PLUIMAGE,SPEC,UNITS,PRICE,PPRICE,PLUCLASSID,PLUSTATUS,PLUTYPEID,PLUCLASSNAME,PLUTYPENAME,
+PLUSTATUSNAME,INVENTORYCOUNT FROM vplaceplu where 1=1 
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and 
+				(
+				 PLUNAME LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 OR BARCODE LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				)
+			</if>
+			<if test="storeId!=-1 and storeId!=null">
+				and storeId=#{storeId}
+			</if>
+			<if test="shelvesId!=-1 and shelvesId!=null">
+				and shelvesId=#{shelvesId}
+			</if>
+			<if test="placeId!=-1 and placeId!=null">
+				and placeId=#{placeId}
+			</if>
+			<if test="pluClassId!=-1 and pluClassId!=null">
+				and pluClassId=#{pluClassId}
+			</if>
+			<if test="pluTypeId!=-1 and pluTypeId!=null">
+				and pluTypeId=#{pluTypeId}
+			</if>
+			<if test="pluStatus!=-1 and pluStatus!=null">
+				and pluStatus=#{pluStatus}
+			</if>
+		order by ID desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

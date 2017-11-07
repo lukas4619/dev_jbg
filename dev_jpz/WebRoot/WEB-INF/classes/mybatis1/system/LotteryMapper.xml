@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="LotteryMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_LOTTERY
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,	
+		OPENDID,	
+		LOTTERYDATE,	
+		LOTTERYCONTENT,	
+		USEDATE,	
+		LOTTERYSTATE
+	</sql>
+	
+	<!--视图名 -->
+	<sql id="viewName">
+		v_LOTTERY
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="viewField">
+		id,
+		opendId,
+		lotteryDate,
+		lotteryContent,
+		useDate,
+		lotteryState,
+		stateName,
+		weChatName,
+		phoneNumber
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{OPENDID},	
+		#{LOTTERYDATE},	
+		#{LOTTERYCONTENT},	
+		#{USEDATE},	
+		#{LOTTERYSTATE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		OPENDID,	
+		LOTTERYDATE,	
+		LOTTERYCONTENT,	
+		LOTTERYSTATE
+		) values (
+		#{OPENDID},	
+		#{LOTTERYDATE},	
+		#{LOTTERYCONTENT},	
+		#{LOTTERYSTATE}
+		)
+	</insert>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			USEDATE = #{USEDATE},
+			LOTTERYSTATE = #{LOTTERYSTATE}
+		where 
+		ID = #{ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1 
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+				(lotteryContent LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 weChatName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				  or
+				 phoneNumber LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				)
+			</if>
+			<if test="pd.opendId != null and pd.opendId != ''">
+				and opendId=#{pd.opendId}
+			</if>
+			<if test="pd.lotteryState!=-1">
+				and lotteryState=#{pd.lotteryState}
+			</if>
+			<if test="pd.lastStart!= null and pd.lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(lotteryDate,'%Y-%m-%d') >=#{pd.lastStart}]]>
+			</if>
+			<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(lotteryDate,'%Y-%m-%d') <= #{pd.lastEnd} ]]>
+			</if>
+		order by lotteryDate desc 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1 
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and 
+				(lotteryContent LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 weChatName LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				  or
+				 phoneNumber LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				)
+			</if>
+			<if test="opendId != null and opendId != ''">
+				and opendId=#{opendId}
+			</if>
+			<if test="lotteryState!=-1">
+				and lotteryState=#{lotteryState}
+			</if>
+			<if test="lastStart!= null and lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(lotteryDate,'%Y-%m-%d') >=#{lastStart}]]>
+			</if>
+			<if test="lastEnd!= null and lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(lotteryDate,'%Y-%m-%d') <= #{lastEnd} ]]>
+			</if>
+		order by lotteryDate desc 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAllBy50" parameterType="pd" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1  order by lotteryDate desc LIMIT 0,20
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

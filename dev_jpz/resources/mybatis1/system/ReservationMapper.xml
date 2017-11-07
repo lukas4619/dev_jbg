@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ReservationMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_RESERVATION
+	</sql>
+	<!--视图名 -->
+	<sql id="viewName">
+		V_RESERVATION
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+	    RESERVATIONID,
+		RESERVATIONNUMBER,	
+		MEMBERID,	
+		RESERVATIONTYPE,	
+		RESERVATIONNAME,	
+		RESERVATIONSEX,	
+		RESERVEDNUMBER,	
+		PROCLASSNAME,	
+		PRODUCTID,	
+		PRONAME,	
+		PROMONEY,	
+		ADVANCEMONEY,	
+		PROIMG,	
+		CREATEDATE,	
+		RESERVATIONSTATEID,	
+		AUTHORREVENUE,	
+		SHAREREVENUE,	
+		VALIDITYDATE,
+		STATEDATE,	
+		PAYSTATE,
+		PAYDATE,
+		SHAREID,
+		STATEREMARKS,
+		ARTICLEID
+	</sql>
+	
+	<!-- 视图字段 -->
+	<sql id="viewField">
+		stateName,	
+		typeName,	
+		reservationID,	
+		reservationNumber,	
+		memberId,	
+		reservationType,	
+		reservationName,	
+		reservationSex,	
+		reservedNumber,	
+		proClassName,	
+		productId,	
+		proName,	
+		proMoney,	
+		advanceMoney,	
+		proImg,	
+		createDate,	
+		reservationStateID,	
+		authorRevenue,
+		shareRevenue,
+		validityDate,
+		stateDate,
+		stateRemarks,
+		payState,
+		payDate,
+		shareId,
+		phoneNumber,
+		weChatName,
+		openId
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{RESERVATIONID},	
+		#{RESERVATIONNUMBER},	
+		#{MEMBERID},	
+		#{RESERVATIONTYPE},	
+		#{RESERVATIONNAME},	
+		#{RESERVATIONSEX},	
+		#{RESERVEDNUMBER},	
+		#{PROCLASSNAME},	
+		#{PRODUCTID},	
+		#{PRONAME},	
+		#{PROMONEY},	
+		#{ADVANCEMONEY},	
+		#{PROIMG},	
+		#{CREATEDATE},	
+		#{RESERVATIONSTATEID},	
+		#{AUTHORREVENUE},	
+		#{SHAREREVENUE},	
+		#{VALIDITYDATE},
+		#{STATEDATE},	
+		#{PAYSTATE},
+		#{PAYDATE},
+		#{SHAREID},
+		#{STATEREMARKS},
+		#{ARTICLEID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			RESERVATIONID = #{RESERVATIONID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RESERVATIONNUMBER = #{RESERVATIONNUMBER},
+			MEMBERID = #{MEMBERID},
+			RESERVATIONTYPE = #{RESERVATIONTYPE},
+			RESERVATIONNAME = #{RESERVATIONNAME},
+			RESERVATIONSEX = #{RESERVATIONSEX},
+			RESERVEDNUMBER = #{RESERVEDNUMBER},
+			PROCLASSNAME = #{PROCLASSNAME},
+			PRODUCTID = #{PRODUCTID},
+			PRONAME = #{PRONAME},
+			PROMONEY = #{PROMONEY},
+			ADVANCEMONEY = #{ADVANCEMONEY},
+			RESERVATIONSTATEID = #{RESERVATIONSTATEID},
+			AUTHORREVENUE = #{AUTHORREVENUE},
+			SHAREREVENUE = #{SHAREREVENUE},
+			VALIDITYDATE = #{VALIDITYDATE},
+			<if test="PAYDATE != null">
+			PAYDATE = #{PAYDATE},
+			</if>
+			<if test="PAYSTATE!=-1 and PAYSTATE != null">
+			 PAYSTATE=#{PAYSTATE},
+			</if>
+			STATEDATE = #{STATEDATE},
+			STATEREMARKS = #{STATEREMARKS}
+		where 
+		RESERVATIONID = #{RESERVATIONID}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="editPayState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RESERVATIONTYPE = #{RESERVATIONTYPE},
+			STATEDATE = #{STATEDATE},
+			PAYSTATE = #{PAYSTATE},
+			PAYDATE = #{PAYDATE}
+		where 
+		RESERVATIONNUMBER = #{RESERVATIONNUMBER}
+	</update>
+	
+	<!-- 修改预订状态 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			RESERVATIONSTATEID = #{reservationStateID},
+			STATEDATE = #{stateDate},
+			STATEREMARKS = #{stateRemarks}
+		where 
+		RESERVATIONID = #{reservationID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			RESERVATIONID = #{RESERVATIONID}
+	</select>
+	
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByViewId" parameterType="pd" resultType="pd">
+		select 
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 
+			reservationID = #{reservationID}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByIdNumber" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			RESERVATIONNUMBER = #{RESERVATIONNUMBER}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1
+		<if test="pd!=null">
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+				(reservationNumber LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 reservationName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 reservedNumber LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 proName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				)
+			</if>
+			<if test="pd.memberId!= null and pd.memberId != ''"><!-- 关键词检索 -->
+				and memberId=#{pd.memberId}
+			</if>
+			<if test="pd.reservationType!=-1">
+				and reservationType=#{pd.reservationType}
+			</if>
+			<if test="pd.reservationStateID!=-1">
+				and reservationStateID=#{pd.reservationStateID}
+			</if>
+			<if test="pd.lastStart!= null and pd.lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{pd.lastStart}]]>
+			</if>
+			<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{pd.lastEnd} ]]>
+			</if>
+		</if>
+		order by createDate desc
+	</select>
+	
+	
+	
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1
+		<if test="pd!=null">
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and 
+				(reservationNumber LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 reservationName LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 reservedNumber LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 proName LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				)
+			</if>
+			<if test="reservationType!=-1">
+				and reservationType=#{reservationType}
+			</if>
+			<if test="pd.reservationStateID!=-1">
+				and reservationStateID=#{reservationStateID}
+			</if>
+			<if test="lastStart!= null and lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{lastStart}]]>
+			</if>
+			<if test="lastEnd!= null and lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{lastEnd} ]]>
+			</if>
+		</if>
+		order by createDate desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			RESERVATIONID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

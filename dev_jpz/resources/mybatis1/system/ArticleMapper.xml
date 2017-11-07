@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ArticleMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_ARTICLE
+	</sql>
+	
+	<!--视图名 -->
+	<sql id="viewName">
+		V_ARTICLE
+	</sql>
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,
+		ARTICLEID,	
+		ARTICLETYPEID,	
+		PRODUCTID,	
+		TITLE,	
+		THUMB_MEDIA_ID,	
+		THUMB_CREATED_AT,
+		ARTICLEIMG,	
+		AUTHORID,	
+		AUTHOR,	
+		DIGEST,	
+		CONTENT,	
+		ARTICLEREMARK,	
+		SHOW_COVER_PIC,	
+		CONTENT_SOURCE_URL,	
+		MEDIA_ID,
+		MEDIA_ID_CREATED_AT,	
+		ARTICLEPV,	
+		ARTICLELIKE,	
+		SHARNUMBER,	
+		ARTICLESTATEID,	
+		PUSHNUMBER,	
+		SORT,	
+		ARTICLEURL,	
+		CREATEDATE,	
+		EDITDATE,
+		REVENUEPV,	
+		REVENUELIKE,	
+		REVENUESUB,	
+		REVENUECON,	
+		REVENUECONM,	
+		REVENUESUBM,	
+		REVENUEPVM
+	</sql>
+	
+	<!-- 视图字段 -->
+	<sql id="viewField">
+		id,
+		articleID,
+		articleTypeID,
+		productId,
+		title,
+		thumb_media_id,
+		articleImg,
+		authorId,
+		author,
+		digest,
+		content,
+		articleRemark,
+		show_cover_pic,
+		content_source_url,
+		media_id,
+		articlePV,
+		articleLike,
+		sharNumber,
+		articleStateID,
+		pushNumber,
+		sort,
+		articleUrl,
+		createDate,
+		editDate,
+		typeName,
+		stateName,
+		weChatName,
+		phoneNumber,
+		proName,
+		revenuePV,	
+		revenueLike,	
+		revenueSub,	
+		revenueCon,	
+		revenueConM,	
+		revenueSubM,	
+		revenuePVM,
+		openId
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},
+		#{ARTICLEID},	
+		#{ARTICLETYPEID},	
+		#{PRODUCTID},	
+		#{TITLE},	
+		#{THUMB_MEDIA_ID},	
+		#{THUMB_CREATED_AT},	
+		#{ARTICLEIMG},	
+		#{AUTHORID},	
+		#{AUTHOR},	
+		#{DIGEST},	
+		#{CONTENT},	
+		#{ARTICLEREMARK},	
+		#{SHOW_COVER_PIC},	
+		#{CONTENT_SOURCE_URL},	
+		#{MEDIA_ID},
+		#{MEDIA_ID_CREATED_AT},
+		#{ARTICLEPV},	
+		#{ARTICLELIKE},	
+		#{SHARNUMBER},	
+		#{ARTICLESTATEID},	
+		#{PUSHNUMBER},	
+		#{SORT},	
+		#{ARTICLEURL},	
+		#{CREATEDATE},	
+		#{EDITDATE},
+		#{REVENUEPV},
+		#{REVENUELIKE},
+		#{REVENUESUB},
+		#{REVENUECON},
+		#{REVENUECONM},
+		#{REVENUESUBM},
+		#{REVENUEPVM}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	ARTICLEID,	
+		ARTICLETYPEID,	
+		PRODUCTID,	
+		TITLE,	
+		THUMB_MEDIA_ID,	
+		THUMB_CREATED_AT,
+		ARTICLEIMG,	
+		AUTHORID,	
+		AUTHOR,	
+		DIGEST,	
+		CONTENT,	
+		ARTICLEREMARK,	
+		SHOW_COVER_PIC,	
+		CONTENT_SOURCE_URL,	
+		MEDIA_ID,
+		MEDIA_ID_CREATED_AT,	
+		ARTICLEPV,	
+		ARTICLELIKE,	
+		SHARNUMBER,	
+		ARTICLESTATEID,	
+		PUSHNUMBER,	
+		SORT,	
+		ARTICLEURL,	
+		CREATEDATE,	
+		EDITDATE,
+		REVENUEPV,	
+		REVENUELIKE,	
+		REVENUESUB,	
+		REVENUECON,	
+		REVENUECONM,	
+		REVENUESUBM,	
+		REVENUEPVM
+		) values (
+		#{ARTICLEID},	
+		#{ARTICLETYPEID},	
+		#{PRODUCTID},	
+		#{TITLE},	
+		#{THUMB_MEDIA_ID},	
+		#{THUMB_CREATED_AT},	
+		#{ARTICLEIMG},	
+		#{AUTHORID},	
+		#{AUTHOR},	
+		#{DIGEST},	
+		#{CONTENT},	
+		#{ARTICLEREMARK},	
+		#{SHOW_COVER_PIC},	
+		#{CONTENT_SOURCE_URL},	
+		#{MEDIA_ID},
+		#{MEDIA_ID_CREATED_AT},
+		#{ARTICLEPV},	
+		#{ARTICLELIKE},	
+		#{SHARNUMBER},	
+		#{ARTICLESTATEID},	
+		#{PUSHNUMBER},	
+		#{SORT},	
+		#{ARTICLEURL},	
+		#{CREATEDATE},	
+		#{EDITDATE},
+		#{REVENUEPV},
+		#{REVENUELIKE},
+		#{REVENUESUB},
+		#{REVENUECON},
+		#{REVENUECONM},
+		#{REVENUESUBM},
+		#{REVENUEPVM}
+		)
+	</insert>
+	
+	<!-- 作者新增 -->
+	<insert id="authorSave" parameterType="pd">
+		insert into <include refid="tableName"></include>
+		(ARTICLEID,ARTICLETYPEID,TITLE,AUTHORID,AUTHOR,DIGEST,CONTENT,ARTICLEREMARK,ARTICLEIMG,CREATEDATE,ARTICLESTATEID) 
+		values (#{ARTICLEID},#{ARTICLETYPEID},#{TITLE},#{AUTHORID},#{AUTHOR},#{DIGEST},#{CONTENT},#{ARTICLEREMARK},#{ARTICLEIMG},#{CREATEDATE},#{ARTICLESTATEID})
+	</insert>
+	
+	<!-- 新增-->
+	<insert id="authorInsert" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		ARTICLEID,
+		ARTICLETYPEID,	
+		TITLE,	
+		THUMB_MEDIA_ID,	
+		THUMB_CREATED_AT,
+		ARTICLEIMG,	
+		AUTHORID,	
+		AUTHOR,	
+		DIGEST,	
+		CONTENT,	
+		ARTICLEREMARK,	
+		SHOW_COVER_PIC,	
+		CONTENT_SOURCE_URL,	
+		ARTICLEPV,	
+		ARTICLELIKE,	
+		SHARNUMBER,	
+		ARTICLESTATEID,	
+		PUSHNUMBER,	
+		SORT,	
+		ARTICLEURL,	
+		CREATEDATE,	
+		REVENUEPV,	
+		REVENUELIKE,	
+		REVENUESUB,	
+		REVENUECON,	
+		REVENUECONM,	
+		REVENUESUBM,	
+		REVENUEPVM
+		) values (
+		#{ARTICLEID},	
+		#{ARTICLETYPEID},	
+		#{TITLE},	
+		#{THUMB_MEDIA_ID},	
+		#{THUMB_CREATED_AT},
+		#{ARTICLEIMG},	
+		#{AUTHORID},	
+		#{AUTHOR},	
+		#{DIGEST},	
+		#{CONTENT},	
+		#{ARTICLEREMARK},	
+		#{SHOW_COVER_PIC},	
+		#{CONTENT_SOURCE_URL},	
+		#{ARTICLEPV},	
+		#{ARTICLELIKE},	
+		#{SHARNUMBER},	
+		#{ARTICLESTATEID},	
+		#{PUSHNUMBER},	
+		#{SORT},	
+		#{ARTICLEURL},	
+		#{CREATEDATE},	
+		#{REVENUEPV},	
+		#{REVENUELIKE},	
+		#{REVENUESUB},	
+		#{REVENUECON},	
+		#{REVENUECONM},	
+		#{REVENUESUBM},	
+		#{REVENUEPVM}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ARTICLETYPEID = #{ARTICLETYPEID},
+			PRODUCTID = #{PRODUCTID},
+			TITLE = #{TITLE},
+			THUMB_MEDIA_ID = #{THUMB_MEDIA_ID},
+			THUMB_CREATED_AT= #{THUMB_CREATED_AT},
+			ARTICLEIMG = #{ARTICLEIMG},
+			AUTHORID = #{AUTHORID},
+			AUTHOR = #{AUTHOR},
+			DIGEST = #{DIGEST},
+			CONTENT = #{CONTENT},
+			ARTICLEREMARK = #{ARTICLEREMARK},
+			SHOW_COVER_PIC = #{SHOW_COVER_PIC},
+			CONTENT_SOURCE_URL = #{CONTENT_SOURCE_URL},
+			MEDIA_ID = #{MEDIA_ID},
+			MEDIA_ID_CREATED_AT = #{MEDIA_ID_CREATED_AT},
+			ARTICLEPV = #{ARTICLEPV},
+			ARTICLELIKE = #{ARTICLELIKE},
+			SHARNUMBER = #{SHARNUMBER},
+			ARTICLESTATEID = #{ARTICLESTATEID},
+			PUSHNUMBER = #{PUSHNUMBER},
+			SORT = #{SORT},
+			ARTICLEURL = #{ARTICLEURL},
+			EDITDATE = #{EDITDATE},
+			REVENUEPV =#{REVENUEPV},
+			REVENUELIKE =#{REVENUELIKE},
+			REVENUESUB =#{REVENUESUB},
+			REVENUECON =#{REVENUECON},
+			REVENUECONM =#{REVENUECONM},
+			REVENUESUBM =#{REVENUESUBM},
+			REVENUEPVM =#{REVENUEPVM}
+		where 
+		ARTICLEID = #{ARTICLEID}
+	</update>
+	
+	
+	
+	<!-- 修改 -->
+	<update id="editPush" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			THUMB_MEDIA_ID = #{THUMB_MEDIA_ID},
+			THUMB_CREATED_AT= #{THUMB_CREATED_AT},
+			MEDIA_ID = #{MEDIA_ID},
+			MEDIA_ID_CREATED_AT = #{MEDIA_ID_CREATED_AT},
+			PUSHNUMBER = #{PUSHNUMBER}
+		where 
+		ARTICLEID = #{ARTICLEID}
+	</update>
+	
+	
+	<!-- 修改状态 -->
+	<update id="editState" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ARTICLESTATEID = #{ARTICLESTATEID},
+			EDITDATE = #{EDITDATE},
+			REVENUEPV =#{REVENUEPV},
+			REVENUELIKE =#{REVENUELIKE},
+			REVENUESUB =#{REVENUESUB},
+			REVENUECON =#{REVENUECON},
+			REVENUECONM =#{REVENUECONM},
+			REVENUESUBM =#{REVENUESUBM},
+			REVENUEPVM =#{REVENUEPVM}
+		where 
+		ARTICLEID = #{ARTICLEID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ARTICLEID = #{ARTICLEID}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByViewId" parameterType="pd" resultType="pd">
+		select 
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 
+			articleID = #{ARTICLEID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1
+		<if test="pd!=null">
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+				(title LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 author LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				  or
+				 weChatName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				  or
+				 phoneNumber LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				  or
+				 proName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 
+				)
+			</if>
+			<if test="pd.authorId!= null and pd.authorId != ''">
+			 and  authorId=#{pd.authorId}
+			</if>
+			<if test="pd.articleTypeID!=-1">
+				and articleTypeID=#{pd.articleTypeID}
+			</if>
+			<if test="pd.articleStateID!=-1">
+				and articleStateID=#{pd.articleStateID}
+			</if>
+			<if test="pd.lastStart!= null and pd.lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{pd.lastStart}]]>
+			</if>
+			<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{pd.lastEnd} ]]>
+			</if>
+		</if>
+		order by createDate desc
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPageByMember" parameterType="page" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1
+		<if test="pd!=null">
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+				(title LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 author LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				  or
+				 weChatName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				  or
+				 phoneNumber LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				  or
+				 proName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 
+				)
+			</if>
+			<if test="pd.authorId!= null and pd.authorId != ''">
+				and authorId=#{pd.authorId}
+			</if>
+		</if>
+		order by createDate desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1 
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and 
+				(title LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 author LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				  or
+				 weChatName LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				  or
+				 phoneNumber LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				  or
+				 proName LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 
+				)
+			</if>
+			<if test="articleTypeID!=-1">
+				and articleTypeID=#{articleTypeID}
+			</if>
+			<if test="articleStateID!=-1">
+				and articleStateID=#{articleStateID}
+			</if>
+			<if test="lastStart!= null and lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{lastStart}]]>
+			</if>
+			<if test="lastEnd!= null and lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{lastEnd} ]]>
+			</if>
+		order by createDate desc
+	</select>
+	
+	
+	<!-- 列表(全部) -->
+	<select id="listByAuthor" parameterType="pd" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1 
+		<if test="author!= null and author != ''"><!-- 关键词检索 -->
+				and  author=#{author}
+		</if>
+		<if test="articleStateID!=-1">
+				and articleStateID=#{articleStateID}
+		</if>
+		<if test="articleTypeID!=-1">
+				and articleTypeID=#{articleTypeID}
+		</if>
+			
+		order by createDate desc LIMIT 0,8
+	</select>
+	
+	<!-- 列表(指定标识) -->
+	<select id="listByIds" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where ID in (${DATA_IDS})
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 给文章添加阅读量 -->
+	<update id="addReadNum" parameterType="java.lang.String">
+		update <include refid="tableName"></include> set articlePV = articlePV + 1 where articleID = #{aRTICLEID}
+	</update>
+	
+		
+	<!-- 给文章添加点赞数量 -->
+	<update id="addLikeNum" parameterType="java.lang.String">
+		update <include refid="tableName"></include> set articleLike = articleLike + 1 where articleID = #{aRTICLEID}
+	</update>
+	
+	<select id="findByFirstId" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+</mapper>

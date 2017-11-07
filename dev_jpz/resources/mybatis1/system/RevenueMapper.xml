@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RevenueMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_REVENUE
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		REVENUEID,	
+		REVENUETYPE,	
+		MEMBERID,	
+		REVENUEMONEY,	
+		REVENUEDATE,	
+		REVENUESTATE,	
+		REVENUESOURCE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{REVENUEID},	
+		#{REVENUETYPE},	
+		#{MEMBERID},	
+		#{REVENUEMONEY},	
+		#{REVENUEDATE},	
+		#{REVENUESTATE},	
+		#{REVENUESOURCE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			REVENUE_ID = #{REVENUE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			REVENUEID = #{REVENUEID},
+			REVENUETYPE = #{REVENUETYPE},
+			MEMBERID = #{MEMBERID},
+			REVENUEMONEY = #{REVENUEMONEY},
+			REVENUEDATE = #{REVENUEDATE},
+			REVENUESTATE = #{REVENUESTATE},
+			REVENUESOURCE = #{REVENUESOURCE},
+		REVENUE_ID = REVENUE_ID
+		where 
+		REVENUE_ID = #{REVENUE_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			REVENUE_ID = #{REVENUE_ID}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByViewId" parameterType="pd" resultType="pd">
+		select 
+		revenueID,
+		revenueType,
+		memberId,
+		revenueMoney,
+		revenueDate,
+		revenueState,
+		revenueSource,
+		stateName,
+		typeName
+		from 
+		v_revenue
+		where 
+	 revenueID = #{revenueID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		SELECT te.revenueID REVENUEID,tty.typeName utypeName,te.revenueType utype,tr.weChatName weChatName,
+		tr.memberId MEMBERID,te.revenueMoney REVENUEMONEY,te.revenueDate REVENUEDATE,tst.`name` typeName,
+		te.revenueSource REVENUESOURCE,tr.memberType from t_revenue te 
+		LEFT JOIN t_types tty on te.revenueType = tty.id LEFT JOIN t_state tst on te.revenueState=tst.id 
+		LEFT JOIN t_member tr on tr.memberId = te.memberId where 1 = 1
+		
+		<if test="pd.keytype != null and pd.keytype !=''">
+			and 
+			<if test="pd.keytype == 1">
+				tr.weChatName like concat('%',concat(#{pd.keywords},'%'))
+			</if>
+			<if test="pd.keytype == 2">
+				tr.memberId = #{pd.keywords}
+			</if>
+			<if test="pd.keytype == 3">
+				tr.memberType = 1
+			</if>
+			<if test="pd.keytype == 4">
+				tr.memberType = 2
+			</if>
+		</if>
+		
+		<if test="pd.lastStart != null and pd.lastStart !=''">
+			and te.REVENUEDATE &gt; #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd != null and pd.lastEnd !=''">
+			and te.REVENUEDATE &lt; #{pd.lastEnd}
+		</if>
+		
+		<if test="pd.lystatus !=null and pd.lystatus !=''">
+			and te.REVENUESTATE = #{pd.lystatus}
+		</if>
+		<if test="pd.utype !=null and pd.utype !=''">
+			and tr.memberType = #{pd.utype}
+		</if>
+		order by tr.memberType desc,te.revenueDate DESC
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPageByMember" parameterType="page" resultType="pd">
+		SELECT te.revenueID ,tty.typeName utypeName,te.revenueType utype,tr.weChatName weChatName,
+		tr.memberId ,te.revenueMoney ,te.revenueDate ,tst.`name` typeName,
+		te.revenueSource,te.revenueState  from t_revenue te 
+		LEFT JOIN t_types tty on te.revenueType = tty.id LEFT JOIN t_state tst on te.revenueState=tst.id 
+		LEFT JOIN t_member tr on tr.memberId = te.memberId where 1 = 1
+		<if test="pd.memberId !=null and pd.memberId !=''">
+			and tr.memberId = #{pd.memberId}
+		</if>
+		<if test="pd.revenueState !='-1' ">
+			and te.revenueState = #{pd.revenueState}
+		</if>
+		ORDER BY te.revenueDate desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			REVENUE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

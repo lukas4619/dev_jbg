@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CouponsMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_COUPONS
+	</sql>
+	
+	<!--视图名 -->
+	<sql id="viewName">
+		V_COUPONS
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		COUPONSID,	
+		COUPONSTYPE,	
+		COUPONSNAME,	
+		DENOMINATION,
+		COUPONSTOTALNUM,	
+		COUPONSUSENUM,	
+		VALIDITY,	
+		CREATEDATE,	
+		EDITDATE,	
+		ADMINID,	
+		COUPONSSTATE
+	</sql>
+	
+	<!-- 视图字段 -->
+	<sql id="viewField">
+		COUPONSID,	
+		COUPONSTYPE,	
+		COUPONSNAME,	
+		DENOMINATION,
+		COUPONSTOTALNUM,	
+		COUPONSUSENUM,	
+		VALIDITY,	
+		CREATEDATE,	
+		EDITDATE,	
+		ADMINID,	
+		TYPENAME,
+		STATENAME,
+		COUPONSSTATE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{COUPONSID},	
+		#{COUPONSTYPE},	
+		#{COUPONSNAME},	
+		#{DENOMINATION},	
+		#{COUPONSTOTALNUM},	
+		#{COUPONSUSENUM},	
+		#{VALIDITY},	
+		#{CREATEDATE},	
+		#{EDITDATE},	
+		#{ADMINID},	
+		#{COUPONSSTATE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			COUPONSID = #{COUPONSID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			COUPONSTYPE = #{COUPONSTYPE},
+			COUPONSNAME = #{COUPONSNAME},
+			DENOMINATION = #{DENOMINATION},
+			COUPONSTOTALNUM = #{COUPONSTOTALNUM},
+			COUPONSUSENUM = #{COUPONSUSENUM},
+			VALIDITY = #{VALIDITY},
+			CREATEDATE = #{CREATEDATE},
+			EDITDATE = #{EDITDATE},
+			ADMINID = #{ADMINID},
+			COUPONSSTATE = #{COUPONSSTATE}
+		where 
+		COUPONSID = #{COUPONSID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="editByCouponsTotalNum" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			COUPONSTOTALNUM = #{COUPONSTOTALNUM},
+			EDITDATE = #{EDITDATE},
+			ADMINID = #{ADMINID}
+		where 
+		COUPONSID = #{COUPONSID}
+	</update>
+	
+	
+	
+	<!-- 修改 -->
+	<update id="editByCouponsUseNum" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			COUPONSUSENUM = #{COUPONSUSENUM},
+			EDITDATE = #{EDITDATE},
+			ADMINID = #{ADMINID}
+		where 
+		COUPONSID = #{COUPONSID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			COUPONSID = #{COUPONSID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1
+		<if test="pd!=null">
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and couponsName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+			</if>
+			<if test="pd.couponsType!=-1">
+				and couponsType=#{pd.couponsType}
+			</if>
+			<if test="pd.couponsState!=-1">
+				and couponsState=#{pd.couponsState}
+			</if>
+			<if test="pd.lastStart!= null and pd.lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{pd.lastStart}]]>
+			</if>
+			<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{pd.lastEnd} ]]>
+			</if>
+		</if>
+		order by createDate desc 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			COUPONSID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

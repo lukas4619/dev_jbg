@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="OrderDetailsMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		TORDERDETAILS
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		BILLNO,	
+		PLUCODE,	
+		PLUNAME,	
+		BARCODE,	
+		UNITS,	
+		SPEC,	
+		PRICE,	
+		PLUCLASSID,
+		PLUTYPEID,
+		PLUCOUNT,
+		SHELVESID,
+		PLACEID,
+		STOREID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{BILLNO},	
+		#{PLUCODE},	
+		#{PLUNAME},	
+		#{BARCODE},	
+		#{UNITS},	
+		#{SPEC},	
+		#{PRICE},	
+		#{PLUCLASSID},	
+		#{PLUTYPEID},
+		#{PLUCOUNT},
+		#{SHELVESID},
+		#{PLACEID},
+		#{STOREID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		BILLNO,	
+		PLUCODE,	
+		PLUNAME,	
+		BARCODE,	
+		UNITS,	
+		SPEC,	
+		PRICE,	
+		PLUCLASSID,
+		PLUTYPEID,
+		PLUCOUNT,
+		SHELVESID,
+		PLACEID,
+		STOREID
+		) values (
+		#{BILLNO},	
+		#{PLUCODE},	
+		#{PLUNAME},	
+		#{BARCODE},	
+		#{UNITS},	
+		#{SPEC},	
+		#{PRICE},	
+		#{PLUCLASSID},	
+		#{PLUTYPEID},
+		#{PLUCOUNT},
+		#{SHELVESID},
+		#{PLACEID},
+		#{STOREID}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			BILLNO = #{BILLNO},
+			PLUCODE = #{PLUCODE},
+			PLUNAME = #{PLUNAME},
+			BARCODE = #{BARCODE},
+			UNITS = #{UNITS},
+			SPEC = #{SPEC},
+			PRICE = #{PRICE},
+		where 
+		ID = #{ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+	SELECT * FROM vorderdetails
+		where 1=1
+		<if test="pd!=null">
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+				(
+				BILLNO LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				OR
+				WECHATNAME LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				OR
+				SHELVESNAME LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				OR
+				PLACENAME LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				)
+			</if>
+			<if test="pd.pluClassId!=-1 and pd.pluClassId!=null">
+				and pluClassId=#{pd.pluClassId}
+			</if>
+			<if test="pd.pluTypeId!=-1 and pd.pluTypeId!=null">
+				and pluTypeId=#{pd.pluTypeId}
+			</if>
+			<if test="pd.storeId!=-1 and pd.storeId!=null">
+				and STOREID=#{pd.storeId}
+			</if>
+			<if test="pd.payMentStatusID!=-1 and pd.payMentStatusID!=null">
+				and payMentStatusID=#{pd.payMentStatusID}
+			</if>
+			<if test="pd.orderStatusID!=-1 and pd.orderStatusID!=null">
+				and orderStatusID=#{pd.orderStatusID}
+			</if>
+			<if test="pd.lastStart!= null and pd.lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(CREATEDATE,'%Y-%m-%d') >=#{pd.lastStart}]]>
+			</if>
+			<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(CREATEDATE,'%Y-%m-%d') <= #{pd.lastEnd} ]]>
+			</if>
+		</if>
+		order by CREATEDATE desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		SELECT * FROM vorderdetails
+			where 1=1
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and 
+				(
+				BILLNO LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				OR
+				WECHATNAME LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				OR
+				SHELVESNAME LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				OR
+				PLACENAME LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				)
+			</if>
+			<if test="pluClassId!=-1 and pluClassId!=null">
+				and pluClassId=#{pluClassId}
+			</if>
+			<if test="pluTypeId!=-1 and pluTypeId!=null">
+				and pluTypeId=#{pluTypeId}
+			</if>
+			<if test="storeId!=-1 and storeId!=null">
+				and STOREID=#{storeId}
+			</if>
+			<if test="payMentStatusID!=-1 and payMentStatusID!=null">
+				and payMentStatusID=#{payMentStatusID}
+			</if>
+			<if test="orderStatusID!=-1 and orderStatusID!=null">
+				and orderStatusID=#{orderStatusID}
+			</if>
+			<if test="lastStart!= null and lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(CREATEDATE,'%Y-%m-%d') >=#{lastStart}]]>
+			</if>
+			<if test="lastEnd!= null and lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(CREATEDATE,'%Y-%m-%d') <= #{lastEnd} ]]>
+			</if>
+		order by CREATEDATE desc
+	</select>
+	
+	
+	<!-- 列表(全部) -->
+	<select id="listByBillNo" parameterType="pd" resultType="pd">
+		SELECT 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+			<if test="billNo!='' and billNo!=null">
+				and billNo=#{billNo}
+			</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

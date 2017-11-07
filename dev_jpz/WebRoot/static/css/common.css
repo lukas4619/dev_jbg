@@ -1,0 +1,259 @@
+*{
+	font-family: "微软雅黑"
+}
+ul{
+	padding: 0;
+	margin: 0;
+}
+body{
+	margin: 0;
+	padding: 0;
+}
+
+a{
+	text-decoration: none;
+}
+a.blue{
+	color:#08A600;
+}
+.txtcenter{
+	text-align: center;
+}
+.txtright{
+	text-align: right;
+}
+.colorgrey{
+	color: grey;
+}
+.content{
+	background-color: #fff;
+}
+.nolist{
+	margin-top: 100px;
+	color:#666;
+	display: none;
+}
+.haslist{
+	margin-top: 0px;
+}
+.haslist header {
+	border-bottom: 1px solid #e5e5e5;
+	padding-bottom: 10px ;
+	padding-top: 10px;
+	float: left;
+	width: 100%;
+}
+.haslist header div{
+	color: #999;
+}
+.width1{
+	width: 50%;
+	padding-left: 10px;
+	float: left;
+	display: inline-block;
+	box-sizing:border-box;
+	font-size: 12px;
+}
+.width2{
+	width: 30%;
+	float: left;
+	display: inline-block;
+	box-sizing:border-box;
+	font-size: 12px;
+}
+.width3{
+	width: 18%;
+	float: left;
+	display: inline-block;
+	box-sizing:border-box;
+	font-size: 12px;
+}
+.width4{
+	width: 30%;
+	float: left;
+	display: inline-block;
+	box-sizing:border-box;
+	font-size: 12px;
+}
+.width5{
+	width: 70%;
+	float: left;
+	display: inline-block;
+	box-sizing:border-box;
+	font-size: 12px;
+}
+.width6{
+	width: 40%;
+	float: left;
+	display: inline-block;
+	box-sizing:border-box;
+	font-size: 14px;
+	height: 30px;
+	line-height: 30px;
+}
+.width7{
+	width: 60%;
+    float: left;
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 5px 0 5px 5px;
+    outline: none;
+    font-size: 14px;
+    height: 30px;
+}
+.lists{
+	width: 100%;
+	clear: both;
+}
+.lists ul li{
+	list-style: none;
+	width: 100%;
+	color: #777;
+	padding: 5px 0;
+	border-bottom: 1px solid #e5e5e5;
+	float: left;
+}
+.loadding{
+	color: #666;
+	padding: 5px 0;
+	clear: both;
+}
+.loadImg{
+	width: 20px;
+	vertical-align: middle;
+}
+.Imgshow{
+	display: inline-block;
+}
+.Imghide{
+	display: none
+}
+.loadText{
+	margin-left: 10px;
+}
+/*详情*/
+.bigdiv {
+    background: white;
+    float: left;
+    width: 100%;
+    padding: 10px;
+    border-bottom: 1px dotted #eee;
+    box-sizing:border-box;
+}
+.bigdiv a{
+	color: black;
+}
+.eu-tips {
+    width: 25%;
+    display: inline-block;
+    font-size: 16px;
+    background: white;
+    padding-left: 10px;
+    text-align: left;
+}
+.eu-input {
+    width: 73%;
+    display: inline-block;
+    font-size: 16px;
+    background: white;
+}
+input {
+    width: 100%;
+    text-align: left;
+    border: none;
+}
+input, select, textarea {
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-appearance: none;
+    border: 0;
+    border-radius: 0;
+    color: black;
+}
+.detailsTitle{
+	font-size: 20px;
+	padding: 20px 0 10px 10px;
+	border-bottom: 1px solid #08A600;
+	color: #08A600;
+	background-color: #f7f7f7;
+	font-size: 16px;
+}
+.btn{
+	width: 96%;
+    margin-left: 2%;
+    margin-top: 25px;
+    border-radius: 3px;
+    font-size: 16px;
+    background: #08A600;
+    color: white;
+    padding: 10px 0;
+    outline: none;
+    letter-spacing: 1px;
+    outline: medium;
+    -webkit-appearance: none;
+    border: 1px solid #08A600;
+}
+.change{
+	background: url(../images/change.png) no-repeat right;
+}
+.change1{
+	background: url(../images/change1.png) no-repeat right;
+}
+a.color9c{
+	color: #00bb9c;
+}
+.nav-botttom{
+	text-align: center;
+	float: left;
+	width: 33%;
+	font-size: 14px;
+}
+.nav-botttom img{
+	width: 26px;
+	vertical-align:bottom;
+}
+.myfooter{
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	padding: 5px .5%;
+	box-sizing:border-box;
+	background-color: rgb(244,244,244);
+}
+.myfooter a{
+	color: black;
+}
+.myfooter a.current{
+	color: #00bb9c;
+}
+.myfooter a:active{
+	color: black;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+.nav-botttom img.navimg1{
+	display: none;
+}
+.current .nav-botttom img.navimg1{
+	display: inline-block;
+}
+.current .nav-botttom img.navimg{
+	display: none;
+}
+.top40{
+	margin-top: 200px;
+	clear: both;
+}
+table{
+	width: 100%;
+	margin: 0;
+	border-spacing: 0;
+}
+th{
+	color: #666;
+}
+th,td{
+	text-align: center;
+	border: 1px solid #e5e5e5;
+	border-width: 0 1px 1px 0;
+	padding: 5px 0;
+	font-size: 12px
+}

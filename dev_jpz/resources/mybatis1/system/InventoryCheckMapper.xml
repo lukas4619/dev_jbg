@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="InventoryCheckMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_INVENTORYCHECK
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,	
+		STOREID,	
+		PLUCODE,	
+		INVENTORYCOUNT,	
+		CHECKCOUNT,	
+		REMARKS,	
+		CREATEDATE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},	
+		#{STOREID},	
+		#{PLUCODE},	
+		#{INVENTORYCOUNT},	
+		#{CHECKCOUNT},	
+		#{REMARKS},	
+		#{CREATEDATE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		STOREID,	
+		PLUCODE,	
+		INVENTORYCOUNT,	
+		CHECKCOUNT,	
+		REMARKS,	
+		CREATEDATE
+		) values (
+		#{STOREID},	
+		#{PLUCODE},	
+		#{INVENTORYCOUNT},	
+		#{CHECKCOUNT},	
+		#{REMARKS},	
+		#{CREATEDATE}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			INVENTORYCHECK_ID = #{INVENTORYCHECK_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ID = #{ID},
+			STOREID = #{STOREID},
+			PLUCODE = #{PLUCODE},
+			INVENTORYCOUNT = #{INVENTORYCOUNT},
+			CHECKCOUNT = #{CHECKCOUNT},
+			REMARKS = #{REMARKS},
+			CREATEDATE = #{CREATEDATE},
+		INVENTORYCHECK_ID = INVENTORYCHECK_ID
+		where 
+		INVENTORYCHECK_ID = #{INVENTORYCHECK_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			INVENTORYCHECK_ID = #{INVENTORYCHECK_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		*
+		from 
+		vinventoryCheck
+		where 1=1
+		<if test="pd!=null">
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+				(
+				 PLUNAME LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 BARCODE LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 tinventory.PLUCODE LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				)
+			</if>
+			<if test="pd.storeId!=-1 and pd.storeId!=null">
+				and STOREID=#{pd.storeId}
+			</if>
+			<if test="pd.pluCode!=-1 and pd.pluCode!=null">
+				and pluCode=#{pd.pluCode}
+			</if>
+			order by 
+			<if test="pd.sortsFied!='' and pd.sortsFied!=null">
+			<![CDATA[${pd.sortsFied}]]>
+			</if>
+		 	<if test="pd.orders!='' and pd.orders!=null">
+			 <![CDATA[${pd.orders}]]>
+			</if>
+			
+		</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		*
+		from 
+		vinventoryCheck
+		where 1=1
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and 
+				(
+				 PLUNAME LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 BARCODE LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 tinventory.PLUCODE LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				)
+			</if>
+			<if test="storeId!=-1 and storeId!=null">
+				and STOREID=#{storeId}
+			</if>
+			<if test="pluCode!=-1 and pluCode!=null">
+				and pluCode=#{pluCode}
+			</if>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			INVENTORYCHECK_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

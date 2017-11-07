@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberBalanceMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_MEMBERBALANCE
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		BALANCEID,	
+		BALANCETYPE,	
+		BALANCENUMBER,	
+		MEMBERID,	
+		BALANCEMONEY,	
+		BALANCESTATE,	
+		EDITDATE,	
+		CREATEDATE,	
+		BALANCEREMARK,	
+		OPERATIONNAME,
+		payDetail
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{BALANCEID},	
+		#{BALANCETYPE},	
+		#{BALANCENUMBER},	
+		#{MEMBERID},	
+		#{BALANCEMONEY},	
+		#{BALANCESTATE},	
+		#{EDITDATE},	
+		#{CREATEDATE},	
+		#{BALANCEREMARK},	
+		#{OPERATIONNAME},
+		#{payDetail}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		BALANCEID,	
+		BALANCETYPE,	
+		BALANCENUMBER,	
+		MEMBERID,	
+		BALANCEMONEY,	
+		BALANCESTATE,	
+		CREATEDATE,	
+		BALANCEREMARK
+		) values (
+		#{BALANCEID},	
+		#{BALANCETYPE},	
+		#{BALANCENUMBER},	
+		#{MEMBERID},	
+		#{BALANCEMONEY},	
+		#{BALANCESTATE},	
+		#{CREATEDATE},	
+		#{BALANCEREMARK}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MEMBERBALANCE_ID = #{MEMBERBALANCE_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			BALANCENUMBER = #{BALANCENUMBER},
+			BALANCEREMARK = #{BALANCEREMARK},
+			EDITDATE = #{EDITDATE},
+			OPERATIONNAME = #{OPERATIONNAME},
+			BALANCESTATE = #{BALANCESTATE},
+			payDetail = #{payDetail}
+		where 
+		BALANCEID = #{BALANCEID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		SELECT te.balanceID,te.balanceState,te.balanceNumber,te.memberID,te.balanceMoney,te.createDate,te.editDate,te.operationName,te.balanceRemark,te.balanceType,tst.`name`,tty.typeName 
+		FROM `t_memberbalance` te LEFT JOIN t_types tty on tty.id = te.balanceType LEFT JOIN t_state tst on tst.id = te.balanceState 
+		where  BALANCEID = #{BALANCEID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd"> 
+		SELECT te.balanceID BALANCEID,te.payDetail,tty.typeName,te.BALANCENUMBER,te.MEMBERID,tr.weChatName,
+		te.balanceMoney BALANCEMONEY,te.balanceState,tst.`name` jsStatus,te.createDate CREATEDATE,te.editDate EDITDATE,te.balanceRemark BALANCEREMARK
+		,te.OPERATIONNAME,tr.memberType 
+		from t_memberbalance te  LEFT JOIN t_types tty on te.balanceType = tty.id 
+		LEFT JOIN t_state tst on te.balanceState=tst.id LEFT JOIN t_member tr on tr.memberId = te.memberID
+		where 1=1
+		<if test="pd.keytype!=null and pd.keytype !=''">
+			and
+			<if test="pd.keytype == 1">
+				te.memberID = #{pd.keywords}
+			</if>
+			<if test="pd.keytype == 2">
+				te.balanceNumber = #{pd.keywords}
+			</if>
+			<if test="pd.keytype == 3">
+				tr.weChatName like concat('%',concat(#{pd.keywords},'%')) 
+			</if>
+			<if test="pd.keytype == 4">
+				te.operationName like concat('%',concat(#{pd.keywords},'%')) 
+			</if>
+			<if test="pd.keytype == 5">
+				tr.memberType = 1
+			</if>
+			<if test="pd.keytype == 6">
+				tr.memberType = 2 
+			</if>
+		</if>
+		
+		<if test="pd.lastStart !=null and pd.lastStart !=''">
+				and te.createDate &gt; #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd !=null and pd.lastEnd !=''">
+				and te.createDate &lt; #{pd.lastEnd}
+		</if>
+		<if test="pd.type !=null and pd.type !=''">
+				and te.balanceType = #{pd.type}
+		</if>
+		<if test="pd.status !=null and pd.status !=''">
+				and te.balanceState = #{pd.status}
+		</if>
+		order by tr.memberType desc
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPageByMember" parameterType="page" resultType="pd"> 
+		SELECT te.balanceID ,tty.typeName,te.balanceNumber,te.memberID,tr.weChatName,
+		te.balanceMoney ,te.balanceState,tst.`name` jsStatus,te.createDate ,te.editDate ,te.balanceRemark 
+		,te.operationName
+		from t_memberbalance te  LEFT JOIN t_types tty on te.balanceType = tty.id 
+		LEFT JOIN t_state tst on te.balanceState=tst.id LEFT JOIN t_member tr on tr.memberId = te.memberID
+		where 1=1
+		<if test="pd.memberID !=null and pd.memberID !=''">
+				and te.memberID = #{pd.memberID}
+		</if>
+		<if test="pd.balanceState !='-1'">
+				and te.balanceState = #{pd.balanceState}
+		</if>
+		ORDER BY te.createDate desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MEMBERBALANCE_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

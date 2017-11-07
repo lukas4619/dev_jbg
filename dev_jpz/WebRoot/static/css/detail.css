@@ -1,0 +1,69 @@
+body{
+	background-color: #f5f5f5;
+	font-family: "微软雅黑";
+	margin: 0;
+}
+.content{
+	background-color: #fff;
+	padding: 10px 0 10px 15px;
+	border-bottom: 1px solid #e5e5e5;
+	width: 100%;
+	box-sizing:border-box;
+	overflow: auto;
+}
+.title{
+	font-size: 12px;
+	color: #999;
+}
+.money{
+	text-align: right;
+	font-size: 34px;
+	font-weight: bold;
+	font-family:"Helvetica";
+	margin-top: 25px;
+	padding-bottom: 10px;
+	padding-right: 15px;
+	box-sizing:border-box;
+	width: 100%;
+	border-bottom: 1px solid #e5e5e5;
+}
+.detail{
+	overflow: auto;
+    padding-top: 8px;
+    padding-right: 15px;
+}
+.floatl{
+	float: left;
+	color: #999;
+	font-size: 12px;
+}
+.floatr{
+	float: right;
+	color: #000;
+	font-size: 12px;
+}
+.content1{
+	background-color: #fff;
+	border-bottom: 1px solid #e5e5e5;
+	width: 100%;
+	box-sizing:border-box;
+	overflow: auto;
+	margin-top: 10px;
+	border-top: 1px solid #e5e5e5;
+	padding-left: 15px;
+}
+.tr{
+	padding: 10px 15px 10px 0;
+	overflow: auto;
+	border-bottom: 1px solid #e5e5e5;
+}
+.content1 div:last-child{
+	border-bottom: 0
+}
+.arrow{
+	background: url(../images/arrow.png) no-repeat right;
+	background-color: #fff;
+	background-size: 12px;
+	padding-right:2%;
+	background-position: 98% 12px;
+}

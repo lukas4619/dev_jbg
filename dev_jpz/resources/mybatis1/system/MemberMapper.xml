@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_MEMBER
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+	    ID,
+		MEMBERID,	
+		MEMBERTYPE,	
+		OPENID,	
+		WECHATNAME,	
+		SEX,	
+		CITY,	
+		COUNTRY,	
+		PROVINCE,	
+		LANGUAGE,	
+		HEADIMGURL,	
+		SUBSCRIBETIME,	
+		GROUPID,	
+		REMARKS,	
+		CREATEDATE,	
+		EDITDATE,	
+		SYNCDATE,	
+		PHONENUMBER,	
+		VERIFYPHONENUMBER,	
+		LASTIP,	
+		LASTDATE,	
+		SUBSCRIBE,	
+		PASSWORD,
+		VERIFYFAVOURABLE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{MEMBERID},	
+		#{MEMBERTYPE},	
+		#{OPENID},	
+		#{WECHATNAME},	
+		#{SEX},	
+		#{CITY},	
+		#{COUNTRY},	
+		#{PROVINCE},	
+		#{LANGUAGE},	
+		#{HEADIMGURL},	
+		#{SUBSCRIBETIME},	
+		#{GROUPID},	
+		#{REMARKS},	
+		#{CREATEDATE},	
+		#{EDITDATE},	
+		#{SYNCDATE},	
+		#{PHONENUMBER},	
+		#{VERIFYPHONENUMBER},	
+		#{LASTIP},	
+		#{LASTDATE},	
+		#{SUBSCRIBE},	
+		#{PASSWORD}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		MEMBERID,	
+		MEMBERTYPE,	
+		OPENID,	
+		WECHATNAME,	
+		SEX,	
+		CITY,	
+		COUNTRY,	
+		PROVINCE,	
+		LANGUAGE,	
+		HEADIMGURL,	
+		SUBSCRIBETIME,	
+		GROUPID,	
+		REMARKS,	
+		CREATEDATE,	
+		VERIFYPHONENUMBER,	
+		SUBSCRIBE,
+		VERIFYFAVOURABLE
+		) values (
+		#{MEMBERID},	
+		#{MEMBERTYPE},	
+		#{OPENID},	
+		#{WECHATNAME},	
+		#{SEX},	
+		#{CITY},	
+		#{COUNTRY},	
+		#{PROVINCE},	
+		#{LANGUAGE},	
+		#{HEADIMGURL},	
+		#{SUBSCRIBETIME},	
+		#{GROUPID},	
+		#{REMARKS},	
+		#{CREATEDATE},	
+		#{VERIFYPHONENUMBER},	
+		#{SUBSCRIBE},
+		#{VERIFYFAVOURABLE}
+		)
+	</insert>
+
+	<!-- 作者登陆校验 -->
+	<select id="getMemberByNameAndPwd" parameterType="pd" resultType="pd">
+		select <include refid="Field"></include> from  <include refid="tableName"></include>
+		where 1=1
+		<if test="PHONENUMBER !=null and PASSWORD != null">
+		and PHONENUMBER = #{PHONENUMBER} and  PASSWORD = #{PASSWORD}
+		</if>
+		and MEMBERTYPE = 1
+	</select>
+	
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MEMBER_ID = #{MEMBER_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MEMBERTYPE = #{MEMBERTYPE},
+			OPENID = #{OPENID},
+			WECHATNAME = #{WECHATNAME},
+			SEX = #{SEX},
+			CITY = #{CITY},
+			COUNTRY = #{COUNTRY},
+			PROVINCE = #{PROVINCE},
+			LANGUAGE = #{LANGUAGE},
+			HEADIMGURL = #{HEADIMGURL},
+			SUBSCRIBETIME = #{SUBSCRIBETIME},
+			GROUPID = #{GROUPID},
+			REMARKS = #{REMARKS},
+			CREATEDATE = #{CREATEDATE},
+			EDITDATE = #{EDITDATE},
+			SYNCDATE = #{SYNCDATE},
+			PHONENUMBER = #{PHONENUMBER},
+			VERIFYPHONENUMBER = #{VERIFYPHONENUMBER},
+			LASTIP = #{LASTIP},
+			LASTDATE = #{LASTDATE},
+			REVENUEMONEY = #{REVENUEMONEY},
+			BALANCEMONEY = #{BALANCEMONEY},
+			SUBSCRIBE = #{SUBSCRIBE},
+			REVENUEPV = #{REVENUEPV},
+			REVENUELIKE = #{REVENUELIKE},
+			REVENUESUB = #{REVENUESUB},
+			REVENUECON = #{REVENUECON},
+			REVENUECONM = #{REVENUECONM},
+			REVENUESUBM = #{REVENUESUBM},
+			REVENUEPVM = #{REVENUEPVM}
+		where 
+		MEMBERID = #{MEMBERID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="editOpenID" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			WECHATNAME = #{WECHATNAME},
+			SEX = #{SEX},
+			CITY = #{CITY},
+			COUNTRY = #{COUNTRY},
+			PROVINCE = #{PROVINCE},
+			LANGUAGE = #{LANGUAGE},
+			HEADIMGURL = #{HEADIMGURL},
+			SUBSCRIBETIME = #{SUBSCRIBETIME},
+			GROUPID = #{GROUPID},
+			REMARKS = #{REMARKS},
+			EDITDATE = #{EDITDATE},
+			SUBSCRIBE = #{SUBSCRIBE}
+		where 
+		OPENID = #{OPENID}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="editByOpenId" parameterType="pd">
+		update
+		T_MEMBER
+		set 
+			SUBSCRIBETIME = #{SUBSCRIBETIME},
+			SUBSCRIBE = #{SUBSCRIBE},
+			EDITDATE = #{EDITDATE}
+		where 
+		OPENID = #{OPENID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="editByTF" parameterType="pd">
+		update
+		T_MEMBER
+		set 
+			VERIFYFAVOURABLE = VERIFYFAVOURABLE-#{VERIFYFAVOURABLE}
+		where 
+		OPENID = #{OPENID}
+	</update>
+	
+	
+	
+	
+	
+	<!-- 修改 -->
+	<update id="editPhoneNumber" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			PHONENUMBER = #{PHONENUMBER},
+			VERIFYFAVOURABLE = #{VERIFYFAVOURABLE},
+			VERIFYPHONENUMBER = #{VERIFYPHONENUMBER}
+		where 
+		MEMBERID = #{MEMBERID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="editMemberType" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		    MEMBERTYPE = #{MEMBERTYPE},
+			PHONENUMBER = #{PHONENUMBER},
+			PASSWORD= #{PASSWORD},
+			VERIFYPHONENUMBER = #{VERIFYPHONENUMBER}
+		where 
+		MEMBERID = #{MEMBERID}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="editLoginDate" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			LASTIP = #{LASTIP},
+			LASTDATE = #{LASTDATE}
+		where 
+		OPENID = #{OPENID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			memberId = #{memberId}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByOpenId" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			OPENID = #{OPENID}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByOpenIdCount" parameterType="pd" resultType="pd">
+		select 
+		count(ID) AS COUNTNUMBER
+		from 
+		<include refid="tableName"></include>
+		where 
+			OPENID = #{OPENID}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByPhoneNumber" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1 
+		<if test="phoneNumber !=null and phoneNumber !=''">
+		and phoneNumber = #{phoneNumber}
+		</if>
+	   <if test="memberId!=null and memberId !=''">
+	   and memberId != #{memberId}
+	   </if>
+	   ORDER BY CREATEDATE DESC LIMIT 0,1
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		
+		<if test="pd.keyType!= null and pd.keyType != ''"><!-- 关键词检索 -->
+			and
+			<if test="pd.keyType==1">
+				memberId LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+			</if>
+			<if test="pd.keyType==2">
+				openId LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+			</if>
+			<if test="pd.keyType==3">
+				weChatName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+			</if>
+			<if test="pd.keyType==4">
+				memberType = 1
+			</if>
+			<if test="pd.keyType==5">
+				memberType = 2
+			</if>
+			
+		</if>
+		<if test="pd.subTime!= null and pd.subTime != ''">
+			and subscribeTime &gt; #{pd.subTime}
+		</if> 
+		<if test="pd.subEndTime!= null and pd.subEndTime != ''">
+			and subscribeTime &lt; #{pd.subEndTime}
+		</if> 
+		order by createDate desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="memberType !=null and memberType !='' ">
+			and memberType = #{memberType} 
+		</if>
+	</select>
+	
+	<!-- 列表(分组排序) -->
+	<select id="listGroupId" parameterType="pd" resultType="pd">
+		select
+		groupId
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		and subscribe = #{subscribe} 
+		GROUP BY groupId 
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MEMBER_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 获取总数 -->
+	<select id="getMemberCount" parameterType="java.lang.Integer" resultType="pd">
+		select 
+			count(memberId) memberCount
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		and memberType = #{memberType} 
+	</select>
+	
+	
+	<!-- 414024003@qq.com -->
+</mapper>

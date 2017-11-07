@@ -1,0 +1,5 @@
+$(function(){
+	$("#sendCode").click(function(){
+		
+	})
+})

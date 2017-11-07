@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ImagesMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_IMAGES
+	</sql>
+	
+	<!--视图名 -->
+	<sql id="viewName">
+		V_IMAGES
+	</sql>
+	<!-- 字段 -->
+	<sql id="Field">
+		IMGID,	
+		IMGTYPE,	
+		IMGTITLE,	
+		IMGDESCRIPTION,	
+		IMGPATH,	
+		IMGGROUPNAME,	
+		MASTERID,	
+		MEDIA_ID,	
+		ISUPLOAD,	
+		IMGSORT,	
+		IMGREMARK,	
+		CREATEDATE,	
+		EDITDATE
+	</sql>
+	
+	<!-- 视图字段 -->
+	<sql id="viewField">
+		imgId,
+		imgType,
+		imgTitle,
+		imgDescription,
+		imgPath,
+		imgGroupName,
+		masterID,
+		media_id,
+		isUpload,
+		imgSort,
+		imgRemark,
+		createDate,
+		editDate,
+		typeName
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{IMGID},	
+		#{IMGTYPE},	
+		#{IMGTITLE},	
+		#{IMGDESCRIPTION},	
+		#{IMGPATH},	
+		#{IMGGROUPNAME},	
+		#{MASTERID},	
+		#{MEDIA_ID},	
+		#{ISUPLOAD},	
+		#{IMGSORT},	
+		#{IMGREMARK},	
+		#{CREATEDATE},	
+		#{EDITDATE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	<include refid="Field"></include>
+		) values (
+	<include refid="FieldValue"></include>
+		)
+	</insert>
+	
+	<insert id="insertBatch" parameterType="pd">  
+    insert into
+    <include refid="tableName"></include>
+      (
+        IMGID,	
+		IMGTYPE,	
+		IMGTITLE,	
+		IMGDESCRIPTION,	
+		IMGPATH,	
+		IMGGROUPNAME,	
+		MASTERID,	
+		MEDIA_ID,	
+		ISUPLOAD,	
+		IMGSORT,	
+		IMGREMARK,	
+		CREATEDATE)  
+    values  
+    <foreach collection="list" item="obj" index="index" separator="," >  
+       (#{obj.IMGID},#{obj.IMGTYPE},#{obj.IMGTITLE},#{obj.IMGDESCRIPTION},#{obj.IMGPATH},#{obj.IMGGROUPNAME},#{obj.MASTERID},
+       #{obj.MEDIA_ID},#{obj.ISUPLOAD},#{obj.IMGSORT},#{obj.IMGREMARK},#{obj.CREATEDATE})  
+    </foreach> 
+     
+    </insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			IMGID = #{IMGID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			IMGTYPE = #{IMGTYPE},
+			IMGTITLE = #{IMGTITLE},
+			IMGDESCRIPTION = #{IMGDESCRIPTION},
+			IMGPATH = #{IMGPATH},
+			IMGGROUPNAME = #{IMGGROUPNAME},
+			MASTERID = #{MASTERID},
+			MEDIA_ID = #{MEDIA_ID},
+			ISUPLOAD = #{ISUPLOAD},
+			IMGSORT = #{IMGSORT},
+			IMGREMARK = #{IMGREMARK},
+			CREATEDATE = #{CREATEDATE},
+			EDITDATE = #{EDITDATE}
+		where 
+		IMGID = #{IMGID}
+	</update>
+	
+		<!-- 修改 -->
+	<update id="editUpLoad" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			MEDIA_ID = #{MEDIA_ID},
+			ISUPLOAD = #{ISUPLOAD},
+			EDITDATE = #{EDITDATE}
+		where 
+		IMGID = #{IMGID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			IMGID = #{IMGID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1
+		<if test="pd!=null">
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+				(imgTitle LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 imgGroupName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				)
+			</if>
+			<if test="pd.imgType!=-1">
+				and imgType=#{pd.imgType}
+			</if>
+			<if test="pd.isUpload!=-1">
+				and isUpload=#{pd.isUpload}
+			</if>
+			<if test="pd.lastStart!= null and pd.lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{pd.lastStart}]]>
+			</if>
+			<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{pd.lastEnd} ]]>
+			</if>
+		</if>
+		
+		order by createDate desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1 
+		<if test="masterID!= null and masterID != ''"><!-- 关键词检索 -->
+				and  masterID = #{masterID}
+		</if>
+		order by createDate desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			IMGID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

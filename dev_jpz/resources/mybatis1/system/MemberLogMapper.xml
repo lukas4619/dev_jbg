@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberLogMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		t_memberlog
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,	
+		LOGTYPE,	
+		CONTENTS,	
+		CREATEDATE,	
+		LOGIP,	
+		MEMBERID	
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},	
+		#{LOGTYPE},	
+		#{CONTENTS},	
+		#{CREATEDATE},	
+		#{LOGIP},	
+		#{MEMBERID}	
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		LOGTYPE,	
+		CONTENTS,	
+		CREATEDATE,	
+		LOGIP,	
+		MEMBERID
+		) values (
+		#{LOGTYPE},	
+		#{CONTENTS},	
+		#{CREATEDATE},	
+		#{LOGIP},	
+		#{MEMBERID}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MEMBERLOG_ID = #{MEMBERLOG_ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ID = #{ID},
+			LOGTYPE = #{LOGTYPE},
+			CONTENTS = #{CONTENTS},
+			CREATEDATE = #{CREATEDATE},
+			LOGIP = #{LOGIP},
+			MEMBERID = #{MEMBERID},
+		MEMBERLOG_ID = MEMBERLOG_ID
+		where 
+		MEMBERLOG_ID = #{MEMBERLOG_ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			MEMBERLOG_ID = #{MEMBERLOG_ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select tg.ID ID,tg.logType LOGTYPE,tg.CONTENTS CONTENTS,tg.CREATEDATE CREATEDATE,
+		tg.LOGIP LOGIP,tr.weChatName weChatName,tr.memberId memberId,tr.memberType from
+		t_memberlog tg left join t_member tr on tg.memberId = tr.memberId
+		where 1=1 
+		<if test="pd.keyType!= null and pd.keyType !=''"><!-- 关键词检索 -->
+			and
+			<if test="pd.keyType == 0">
+				ID = #{pd.keywords}
+			</if>
+			<if test="pd.keyType == 1">
+				weChatName = #{pd.keywords}
+			</if>
+			<if test="pd.keyType == 2">
+				LOGIP = #{pd.keywords}
+			</if>
+			<if test="pd.keyType == 3">
+				tr.memberType = 1
+			</if>
+			<if test="pd.keyType == 4">
+				tr.memberType = 2
+			</if>
+		</if>
+		
+		<if test="pd.lastStart !=null and pd.lastStart !=''">
+			and tg.CREATEDATE &gt; #{pd.lastStart}
+		</if>
+		<if test="pd.lastEnd !=null and pd.lastEnd !=''">
+			and tg.CREATEDATE &lt; #{pd.lastEnd}
+		</if>
+		
+		order by tr.CREATEDATE desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			MEMBERLOG_ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ResponseLogMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_RESPONSELOG
+	</sql>
+	
+	<!--视图名 -->
+	<sql id="viewName">
+		V_RESPONSELOG
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+		ID,	
+		RESPONSETYPE,	
+		SENDTYPE,	
+		KEYWORDS,	
+		CONTENT,	
+		ISVALID,	
+		ARTICLEIDS,
+		CREATEDATE,	
+		EDITDATE,	
+		ADMINID
+	</sql>
+	
+	<!-- 视图字段 -->
+	<sql id="viewField">
+		ID,	
+		RESPONSETYPE,	
+		SENDTYPE,	
+		KEYWORDS,	
+		CONTENT,	
+		ISVALID,	
+		ARTICLEIDS,
+		CREATEDATE,	
+		EDITDATE,
+		TYPENAME,	
+		ADMINID
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		#{ID},	
+		#{RESPONSETYPE},	
+		#{SENDTYPE},	
+		#{KEYWORDS},	
+		#{CONTENT},	
+		#{ISVALID},	
+		#{ARTICLEIDS},	
+		#{CREATEDATE},	
+		#{EDITDATE},	
+		#{ADMINID}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+		RESPONSETYPE,	
+		SENDTYPE,	
+		KEYWORDS,	
+		CONTENT,	
+		ISVALID,	
+		ARTICLEIDS,
+		CREATEDATE,	
+		EDITDATE,	
+		ADMINID
+		) values (
+		#{RESPONSETYPE},	
+		#{SENDTYPE},	
+		#{KEYWORDS},	
+		#{CONTENT},	
+		#{ISVALID},	
+		#{ARTICLEIDS},
+		#{CREATEDATE},	
+		#{EDITDATE},	
+		#{ADMINID}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+			ID = #{ID},
+			RESPONSETYPE = #{RESPONSETYPE},
+			SENDTYPE = #{SENDTYPE},
+			KEYWORDS = #{KEYWORDS},
+			CONTENT = #{CONTENT},
+			ISVALID = #{ISVALID},
+			ARTICLEIDS = #{ARTICLEIDS},
+			EDITDATE = #{EDITDATE},
+			ADMINID = #{ADMINID}
+		where 
+		ID = #{ID}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="editByIsValId" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set
+		ISVALID = #{ISVALID},
+		ADMINID = #{ADMINID}
+		where
+		ID = #{ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findByWhre" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					keywords LIKE CONCAT(CONCAT('', #{keywords}),'%')
+					 or 
+					content LIKE CONCAT(CONCAT('', #{keywords}),'%') 
+				)
+		</if>
+		<if test="sendType!= null and sendType!=-1">
+				and sendType=#{sendType}
+		</if>
+		<if test="responseType!= null and responseType!=-1">
+				and responseType=#{responseType}
+		</if>
+		<if test="isValid!= null and isValid!=-1">
+				and isValid=#{isValid}
+		</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1
+		<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+				keywords LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+					 or 
+			    content LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				)
+		</if>
+		<if test="pd.responseType!=-1">
+				and responseType=#{pd.responseType}
+			</if>
+			<if test="pd.sendType!=-1">
+				and sendType=#{pd.sendType}
+			</if>
+			<if test="pd.lastStart!= null and pd.lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{pd.lastStart}]]>
+			</if>
+			<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{pd.lastEnd} ]]>
+			</if>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="viewField"></include>
+		from 
+		<include refid="viewName"></include>
+		where 1=1 
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+			and
+				(
+					keywords LIKE CONCAT(CONCAT('', #{keywords}),'%')
+					 or 
+					content LIKE CONCAT(CONCAT('', #{keywords}),'%') 
+				)
+		</if>
+		<if test="responseType!=-1">
+				and responseType=#{responseType}
+			</if>
+			<if test="sendType!=-1">
+				and sendType=#{sendType}
+			</if>
+			<if test="lastStart!= null and lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{lastStart}]]>
+			</if>
+			<if test="lastEnd!= null and lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{lastEnd} ]]>
+			</if>
+		order by createDate desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>

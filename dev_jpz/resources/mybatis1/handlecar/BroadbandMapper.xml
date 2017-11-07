@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="BroadbandMapper">
+	
+	<!--表名 -->
+	<sql id="tableName">
+		T_BROADBAND
+	</sql>
+	
+	<!-- 字段 -->
+	<sql id="Field">
+      	 ID,	
+      	 ATTACH,	
+      	 WBNAME,	
+      	 WBNUMBER,	
+      	 USERNAME,	
+      	 USERPASSWORD,	
+      	 WBTYPE,	
+      	 BW,	
+      	 EXPIREDATE,	
+      	 CONTACTS,	
+      	 CSTEL,	
+      	 RENEWDATE,	
+    	 CREATEDATE
+	</sql>
+	
+	<!-- 字段值 -->
+	<sql id="FieldValue">
+		    #{ID},	
+		    #{ATTACH},	
+		    #{WBNAME},	
+		    #{WBNUMBER},	
+		    #{USERNAME},	
+		    #{USERPASSWORD},	
+		    #{WBTYPE},	
+		    #{BW},	
+		    #{EXPIREDATE},	
+		    #{CONTACTS},	
+		    #{CSTEL},	
+		    #{RENEWDATE},	
+		    #{CREATEDATE}
+	</sql>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="pd">
+		insert into 
+	<include refid="tableName"></include>
+		(
+	 	 ATTACH,	
+      	 WBNAME,	
+      	 WBNUMBER,	
+      	 USERNAME,	
+      	 USERPASSWORD,	
+      	 WBTYPE,	
+      	 BW,	
+      	 EXPIREDATE,	
+      	 CONTACTS,	
+      	 CSTEL,	
+    	 CREATEDATE
+		) values (
+		#{ATTACH},	
+	    #{WBNAME},	
+	    #{WBNUMBER},	
+	    #{USERNAME},	
+	    #{USERPASSWORD},	
+	    #{WBTYPE},	
+	    #{BW},	
+	    #{EXPIREDATE},	
+	    #{CONTACTS},	
+	    #{CSTEL},	
+	    #{CREATEDATE}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="pd">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</delete>
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		    ATTACH = #{ATTACH},
+		    WBNAME = #{WBNAME},
+		    WBNUMBER = #{WBNUMBER},
+		    USERNAME = #{USERNAME},
+		    USERPASSWORD = #{USERPASSWORD},
+		    WBTYPE = #{WBTYPE},
+		    BW = #{BW},
+		    EXPIREDATE = #{EXPIREDATE},
+		    CONTACTS = #{CONTACTS},
+		    CSTEL = #{CSTEL}
+		where 
+		ID = #{ID}
+	</update>
+	
+	<!-- 修改 -->
+	<update id="editDate" parameterType="pd">
+		update
+		<include refid="tableName"></include>
+		set 
+		    EXPIREDATE = #{EXPIREDATE},
+		    RENEWDATE = #{RENEWDATE}
+		where 
+		ID = #{ID}
+	</update>
+	
+	<!-- 通过ID获取数据 -->
+	<select id="findById" parameterType="pd" resultType="pd">
+		select 
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 
+			ID = #{ID}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+		<if test="pd!=null">
+			<if test="pd.keywords!= null and pd.keywords != ''"><!-- 关键词检索 -->
+				and 
+				(attach LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 wbName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 wbNumber LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 userName LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				 or
+				 wbType LIKE CONCAT(CONCAT('', #{pd.keywords}),'%')
+				)
+			</if>
+			<if test="pd.lastStart!= null and pd.lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{pd.lastStart}]]>
+			</if>
+			<if test="pd.lastEnd!= null and pd.lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{pd.lastEnd} ]]>
+			</if>
+		</if>
+		order by createDate desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="pd" resultType="pd">
+		select
+		<include refid="Field"></include>
+		from 
+		<include refid="tableName"></include>
+		where 1=1
+			<if test="keywords!= null and keywords != ''"><!-- 关键词检索 -->
+				and 
+				(attach LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 wbName LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 wbNumber LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 userName LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				 or
+				 wbType LIKE CONCAT(CONCAT('', #{keywords}),'%')
+				)
+			</if>
+			<if test="lastStart!= null and lastStart != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') >=#{lastStart}]]>
+			</if>
+			<if test="lastEnd!= null and lastEnd != ''">
+		 <![CDATA[ AND  DATE_FORMAT(createDate,'%Y-%m-%d') <= #{lastEnd} ]]>
+			</if>
+		order by createDate desc
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteAll" parameterType="String">
+		delete from
+		<include refid="tableName"></include>
+		where 
+			ID in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 414024003@qq.com -->
+</mapper>
