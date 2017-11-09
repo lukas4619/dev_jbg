@@ -119,7 +119,7 @@ public class appmember extends BaseController{
 			map.put("d", data);
 		} catch (Exception e) {
 			map.put("c", -3);
-			map.put("m", "服务器异常");
+			map.put("m", "服务器异常1111111111111");
 			map.put("d", "");
 			logger.info("appstore/index：" + e.toString());
 			e.printStackTrace();
