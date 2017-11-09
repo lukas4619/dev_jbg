@@ -31,7 +31,7 @@ public class AppInterceptor extends HandlerInterceptorAdapter{
 	//|(logout)|(code)|(frontStore)|(app)|(MP_verify_0eQuFBh07Z8oNTQz.txt)|(weixin)|(wechat)|(news)|(oAuthManage)|(frontLogin)|(frontMember)|(frontAuthor)|(myRevenue)|(frontReservate)|(myBalance)|(myReservation)|(myArticle)|(myCoupon)|(frontProduct)|(plugins)|(weChatPay)|(frontLottery)|(uploadFiles)|(static)|(main)|(websocket)
 
 	//接口名称
-	public static final String NO_INTERCEPTOR_APPNAME = ".*/((index)).*";	//不对匹配该值的访问路径拦截（正则）
+	public static final String NO_INTERCEPTOR_APPNAME = ".*/((index))|(suborder).*";	//不对匹配该值的访问路径拦截（正则）
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

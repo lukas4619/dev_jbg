@@ -32,6 +32,10 @@
 			<mvc:mapping path="/appstore/**"/>
 			<bean class="com.fh.interceptor.AppInterceptor"/>
 		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/apporder/**"/>
+			<bean class="com.fh.interceptor.AppInterceptor"/>
+		</mvc:interceptor>
 		
 	</mvc:interceptors>
 	 

@@ -1,4 +1,4 @@
-package com.fh.controller.app.index;
+package com.fh.controller.app.member;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +28,8 @@ import com.fh.util.PageData;
 import com.fh.util.StringUtil;
 
 @Controller
-@RequestMapping(value = "/appstore")
-public class index extends BaseController{
+@RequestMapping(value = "/appmember")
+public class appmember extends BaseController{
 	
 	@Resource(name = "skupluService")
 	private SkupluManager skupluService;
