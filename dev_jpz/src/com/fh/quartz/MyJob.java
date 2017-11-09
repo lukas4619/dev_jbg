@@ -60,7 +60,7 @@ public class MyJob {
 						m.put("keyword2", pageData.getString("storeDistrict")+pageData.getString("storeAddress"));
 						m.put("keyword3", new SimpleDateFormat("yyyy年MM月dd日 HH:mm ").format(new Date()));
 						m.put("remark", "请及时期望门店补充库存，以免影响您的销售！");
-						List<Template> t = loadTemplateList(m);
+						List<Template> t = loadTemplateList(m); 
 						logger.info("show PageData m: "+m);
 						logger.info("show List<Template> t: "+t);
 						TemplateMessage.sendTemplateMessage(openId,template_id,url,topcolor,t);

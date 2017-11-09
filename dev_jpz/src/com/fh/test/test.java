@@ -20,6 +20,8 @@ public class test {
 //		 if(pd.get("SUBSCRIBE")+""=="0" && userInfo.getSubscribe()=="1"){
 //				System.err.println("23123123123");
 //		 }
+		 int STOREID =1;
+		 System.err.println(com.fh.util.security.Encrypt.MD5ByKey(1+""));
 		 String[] keys = {"first","keyword1","keyword2", "keyword3", "keyword4","remark"};  
 		 System.err.println(keys[0].toString());
 	    }

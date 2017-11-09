@@ -252,7 +252,7 @@
 	
 	<!-- 批量删除 -->
 	<delete id="deleteAll" parameterType="String">
-		delete from
+		delete from 
 		<include refid="tableName"></include>
 		where 
 			ID in
